@@ -1,6 +1,6 @@
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from itertools import count
 from threading import Lock
 
@@ -38,7 +38,7 @@ def list_incidents():
 def create_incident(payload: IncidentCreate):
     with lock:
         item = Incident(id=next(ids), title=payload.title, severity=payload.severity,
-                        status='open', created_at=datetime.now(timezone.utc))
+                        status='open', created_at=datetime.now(UTC))
         store[item.id] = item
     logger.info('incident_created id=%s severity=%s', item.id, item.severity)
     return item
