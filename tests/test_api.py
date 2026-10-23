@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+
 from app.main import app, store
 
 client = TestClient(app)
@@ -12,7 +13,10 @@ def test_health():
     assert response.json()['status'] == 'ok'
 
 def test_create_and_resolve_incident():
-    created = client.post('/incidents', json={'title': 'API inaccessible', 'severity': 'high'})
+    created = client.post(
+        '/incidents',
+        json={'title': 'API inaccessible', 'severity': 'high'},
+    )
     assert created.status_code == 201
     incident_id = created.json()['id']
     assert created.json()['status'] == 'open'

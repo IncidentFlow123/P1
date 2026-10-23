@@ -27,7 +27,11 @@ app = FastAPI(title='IncidentFlow', version='1.0.0')
 
 @app.get('/health')
 def health():
-    return {'status': 'ok', 'service': 'incidentflow', 'environment': os.getenv('APP_ENV', 'development')}
+    return {
+        'status': 'ok',
+        'service': 'incidentflow',
+        'environment': os.getenv('APP_ENV', 'development'),
+    }
 
 @app.get('/incidents', response_model=list[Incident])
 def list_incidents():
@@ -37,8 +41,13 @@ def list_incidents():
 @app.post('/incidents', response_model=Incident, status_code=201)
 def create_incident(payload: IncidentCreate):
     with lock:
-        item = Incident(id=next(ids), title=payload.title, severity=payload.severity,
-                        status='open', created_at=datetime.now(timezone.utc))
+        item = Incident(
+            id=next(ids),
+            title=payload.title,
+            severity=payload.severity,
+            status='open',
+            created_at=datetime.now(timezone.utc),
+        )
         store[item.id] = item
     logger.info('incident_created id=%s severity=%s', item.id, item.severity)
     return item
