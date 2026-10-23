@@ -49,7 +49,7 @@ def resolve_incident(incident_id: int):
         item = store.get(incident_id)
         if item is None:
             raise HTTPException(status_code=404, detail='Incident not found')
-        updated = item.model_copy(update={'status': 'resolved'})
+        updated = item.copy(update={'status': 'resolved'})
         store[incident_id] = updated
     logger.info('incident_resolved id=%s', incident_id)
     return updated
